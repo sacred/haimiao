@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.mapper.OmsOrderLoadingMapper">
+  <resultMap id="BaseResultMap" type="com.macro.mall.model.OmsOrderLoading">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="loading_no" jdbcType="VARCHAR" property="loadingNo" />
+    <result column="plate_number" jdbcType="VARCHAR" property="plateNumber" />
+    <result column="loading_date" jdbcType="DATE" property="loadingDate" />
+    <result column="total_number" jdbcType="INTEGER" property="totalNumber" />
+    <result column="total_weight" jdbcType="DECIMAL" property="totalWeight" />
+    <result column="freight_fee" jdbcType="DECIMAL" property="freightFee" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, loading_no, plate_number, loading_date, total_number, total_weight, freight_fee, 
+    create_time, update_time, operator, state
+  </sql>
+  <select id="selectByExample" parameterType="com.macro.mall.model.OmsOrderLoadingExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from oms_order_loading
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from oms_order_loading
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from oms_order_loading
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.macro.mall.model.OmsOrderLoadingExample">
+    delete from oms_order_loading
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.macro.mall.model.OmsOrderLoading">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into oms_order_loading (loading_no, plate_number, loading_date, 
+      total_number, total_weight, freight_fee, 
+      create_time, update_time, operator, 
+      state)
+    values (#{loadingNo,jdbcType=VARCHAR}, #{plateNumber,jdbcType=VARCHAR}, #{loadingDate,jdbcType=DATE}, 
+      #{totalNumber,jdbcType=INTEGER}, #{totalWeight,jdbcType=DECIMAL}, #{freightFee,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.macro.mall.model.OmsOrderLoading">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into oms_order_loading
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="loadingNo != null">
+        loading_no,
+      </if>
+      <if test="plateNumber != null">
+        plate_number,
+      </if>
+      <if test="loadingDate != null">
+        loading_date,
+      </if>
+      <if test="totalNumber != null">
+        total_number,
+      </if>
+      <if test="totalWeight != null">
+        total_weight,
+      </if>
+      <if test="freightFee != null">
+        freight_fee,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="loadingNo != null">
+        #{loadingNo,jdbcType=VARCHAR},
+      </if>
+      <if test="plateNumber != null">
+        #{plateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="loadingDate != null">
+        #{loadingDate,jdbcType=DATE},
+      </if>
+      <if test="totalNumber != null">
+        #{totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="totalWeight != null">
+        #{totalWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="freightFee != null">
+        #{freightFee,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.macro.mall.model.OmsOrderLoadingExample" resultType="java.lang.Long">
+    select count(*) from oms_order_loading
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update oms_order_loading
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.loadingNo != null">
+        loading_no = #{row.loadingNo,jdbcType=VARCHAR},
+      </if>
+      <if test="row.plateNumber != null">
+        plate_number = #{row.plateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="row.loadingDate != null">
+        loading_date = #{row.loadingDate,jdbcType=DATE},
+      </if>
+      <if test="row.totalNumber != null">
+        total_number = #{row.totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="row.totalWeight != null">
+        total_weight = #{row.totalWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="row.freightFee != null">
+        freight_fee = #{row.freightFee,jdbcType=DECIMAL},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        update_time = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.operator != null">
+        operator = #{row.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update oms_order_loading
+    set id = #{row.id,jdbcType=BIGINT},
+      loading_no = #{row.loadingNo,jdbcType=VARCHAR},
+      plate_number = #{row.plateNumber,jdbcType=VARCHAR},
+      loading_date = #{row.loadingDate,jdbcType=DATE},
+      total_number = #{row.totalNumber,jdbcType=INTEGER},
+      total_weight = #{row.totalWeight,jdbcType=DECIMAL},
+      freight_fee = #{row.freightFee,jdbcType=DECIMAL},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      update_time = #{row.updateTime,jdbcType=TIMESTAMP},
+      operator = #{row.operator,jdbcType=VARCHAR},
+      state = #{row.state,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.macro.mall.model.OmsOrderLoading">
+    update oms_order_loading
+    <set>
+      <if test="loadingNo != null">
+        loading_no = #{loadingNo,jdbcType=VARCHAR},
+      </if>
+      <if test="plateNumber != null">
+        plate_number = #{plateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="loadingDate != null">
+        loading_date = #{loadingDate,jdbcType=DATE},
+      </if>
+      <if test="totalNumber != null">
+        total_number = #{totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="totalWeight != null">
+        total_weight = #{totalWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="freightFee != null">
+        freight_fee = #{freightFee,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.macro.mall.model.OmsOrderLoading">
+    update oms_order_loading
+    set loading_no = #{loadingNo,jdbcType=VARCHAR},
+      plate_number = #{plateNumber,jdbcType=VARCHAR},
+      loading_date = #{loadingDate,jdbcType=DATE},
+      total_number = #{totalNumber,jdbcType=INTEGER},
+      total_weight = #{totalWeight,jdbcType=DECIMAL},
+      freight_fee = #{freightFee,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

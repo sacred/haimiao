@@ -95,6 +95,7 @@ public class UmsAdminController {
         UmsAdmin umsAdmin = adminService.getAdminByUsername(username);
         Map<String, Object> data = new HashMap<>();
         data.put("username", umsAdmin.getUsername());
+        data.put("nickname", umsAdmin.getNickName());
         data.put("menus", roleService.getMenuList(umsAdmin.getId()));
         data.put("icon", umsAdmin.getIcon());
         List<UmsRole> roleList = adminService.getRoleList(umsAdmin.getId());
@@ -102,6 +103,7 @@ public class UmsAdminController {
             List<String> roles = roleList.stream().map(UmsRole::getName).collect(Collectors.toList());
             data.put("roles",roles);
         }
+
         return CommonResult.success(data);
     }
 

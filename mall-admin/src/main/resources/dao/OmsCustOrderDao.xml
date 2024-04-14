@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.dao.OmsCustOrderDao">
+    <resultMap id="custOrderSettlementResult" type="com.macro.mall.dto.OmsCustOrderSettlementResult">
+        <id property="orderDate" column="order_date"/>
+        <id property="localCust" column="local_cust"/>
+        <result property="totalFee" column="total_fee"/>
+        <collection property="custOrderList" resultMap="com.macro.mall.mapper.OmsCustOrderMapper.BaseResultMap"/>
+    </resultMap>
+
+    <select id="getList" resultMap="com.macro.mall.mapper.OmsCustOrderMapper.BaseResultMap">
+        SELECT * FROM oms_cust_order o
+        WHERE 1 = 1
+        <if test="queryParam != null">
+            <include refid="Param_Where_Clause"/>
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <select id="getSettlementlist" resultMap="custOrderSettlementResult">
+        SELECT o1.order_date, o1.local_cust, o1.total_fee, o2.*
+        FROM (SELECT order_date, local_cust, sum(freight_fee) total_fee
+        FROM oms_cust_order o
+        WHERE 1 = 1
+        <if test="queryParam != null">
+            <include refid="Param_Where_Clause"/>
+        </if>
+        GROUP BY order_date, local_cust
+        ORDER BY order_date DESC ) o1
+        LEFT JOIN oms_cust_order o2
+        ON o1.order_date = o2.order_date AND o1.local_cust = o2.local_cust
+    </select>
+
+    <sql id="Param_Where_Clause">
+        <if test="queryParam.custOrderNo!=null and queryParam.custOrderNo!=''">
+            AND cust_order_no = #{queryParam.custOrderNo}
+        </if>
+        <if test="queryParam.localCust!=null and queryParam.localCust!=''">
+            AND local_cust = #{queryParam.localCust}
+        </if>
+        <if test="queryParam.hkCust!=null and queryParam.hkCust!=''">
+            AND hk_cust = #{queryParam.hkCust}
+        </if>
+        <if test="queryParam.goodType!=null and queryParam.goodType!=''">
+            AND good_type = #{queryParam.goodType}
+        </if>
+        <if test="queryParam.orderState!=null and queryParam.orderState.size()!=0">
+            AND state IN
+            <foreach collection="queryParam.orderState" item="state" separator="," open="(" close=")">
+                #{state}
+            </foreach>
+        </if>
+        <if test="queryParam.orderDateStart!=null and queryParam.orderDateStart!=''">
+            AND order_date &gt;= CONCAT(#{queryParam.orderDateStart},' 00:00:00')
+        </if>
+        <if test="queryParam.orderDateEnd!=null and queryParam.orderDateEnd!=''">
+            AND order_date &lt;= CONCAT(#{queryParam.orderDateEnd},' 23:59:59')
+        </if>
+    </sql>
+</mapper>

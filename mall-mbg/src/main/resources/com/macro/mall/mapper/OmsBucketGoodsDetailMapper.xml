@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.mapper.OmsBucketGoodsDetailMapper">
+  <resultMap id="BaseResultMap" type="com.macro.mall.model.OmsBucketGoodsDetail">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="local_cust" jdbcType="VARCHAR" property="localCust" />
+    <result column="hk_cust" jdbcType="VARCHAR" property="hkCust" />
+    <result column="order_loading_id" jdbcType="BIGINT" property="orderLoadingId" />
+    <result column="bucket_id" jdbcType="BIGINT" property="bucketId" />
+    <result column="cust_order_id" jdbcType="BIGINT" property="custOrderId" />
+    <result column="plate_number" jdbcType="VARCHAR" property="plateNumber" />
+    <result column="good_type" jdbcType="VARCHAR" property="goodType" />
+    <result column="packing_type" jdbcType="VARCHAR" property="packingType" />
+    <result column="fcl_number" jdbcType="INTEGER" property="fclNumber" />
+    <result column="unit_weight" jdbcType="DECIMAL" property="unitWeight" />
+    <result column="addition_number" jdbcType="INTEGER" property="additionNumber" />
+    <result column="addition_weight1" jdbcType="DECIMAL" property="additionWeight1" />
+    <result column="addition_weight2" jdbcType="DECIMAL" property="additionWeight2" />
+    <result column="total_number" jdbcType="INTEGER" property="totalNumber" />
+    <result column="total_weight" jdbcType="DECIMAL" property="totalWeight" />
+    <result column="freight_fee" jdbcType="DECIMAL" property="freightFee" />
+    <result column="loading_confirm_state" jdbcType="INTEGER" property="loadingConfirmState" />
+    <result column="loading_confirm_operator" jdbcType="VARCHAR" property="loadingConfirmOperator" />
+    <result column="loading_confirm_time" jdbcType="TIMESTAMP" property="loadingConfirmTime" />
+    <result column="sending_confirm_state" jdbcType="INTEGER" property="sendingConfirmState" />
+    <result column="sending_comfirm_operator" jdbcType="VARCHAR" property="sendingComfirmOperator" />
+    <result column="sending_comfirm_time" jdbcType="TIMESTAMP" property="sendingComfirmTime" />
+    <result column="sending_confirm_notes" jdbcType="VARCHAR" property="sendingConfirmNotes" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, local_cust, hk_cust, order_loading_id, bucket_id, cust_order_id, plate_number, 
+    good_type, packing_type, fcl_number, unit_weight, addition_number, addition_weight1, 
+    addition_weight2, total_number, total_weight, freight_fee, loading_confirm_state, 
+    loading_confirm_operator, loading_confirm_time, sending_confirm_state, sending_comfirm_operator, 
+    sending_comfirm_time, sending_confirm_notes, create_time, update_time, operator, 
+    state
+  </sql>
+  <select id="selectByExample" parameterType="com.macro.mall.model.OmsBucketGoodsDetailExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from oms_bucket_goods_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from oms_bucket_goods_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from oms_bucket_goods_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.macro.mall.model.OmsBucketGoodsDetailExample">
+    delete from oms_bucket_goods_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.macro.mall.model.OmsBucketGoodsDetail">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into oms_bucket_goods_detail (local_cust, hk_cust, order_loading_id, 
+      bucket_id, cust_order_id, plate_number, 
+      good_type, packing_type, fcl_number, 
+      unit_weight, addition_number, addition_weight1, 
+      addition_weight2, total_number, total_weight, 
+      freight_fee, loading_confirm_state, loading_confirm_operator, 
+      loading_confirm_time, sending_confirm_state, 
+      sending_comfirm_operator, sending_comfirm_time, 
+      sending_confirm_notes, create_time, update_time, 
+      operator, state)
+    values (#{localCust,jdbcType=VARCHAR}, #{hkCust,jdbcType=VARCHAR}, #{orderLoadingId,jdbcType=BIGINT}, 
+      #{bucketId,jdbcType=BIGINT}, #{custOrderId,jdbcType=BIGINT}, #{plateNumber,jdbcType=VARCHAR}, 
+      #{goodType,jdbcType=VARCHAR}, #{packingType,jdbcType=VARCHAR}, #{fclNumber,jdbcType=INTEGER}, 
+      #{unitWeight,jdbcType=DECIMAL}, #{additionNumber,jdbcType=INTEGER}, #{additionWeight1,jdbcType=DECIMAL}, 
+      #{additionWeight2,jdbcType=DECIMAL}, #{totalNumber,jdbcType=INTEGER}, #{totalWeight,jdbcType=DECIMAL}, 
+      #{freightFee,jdbcType=DECIMAL}, #{loadingConfirmState,jdbcType=INTEGER}, #{loadingConfirmOperator,jdbcType=VARCHAR}, 
+      #{loadingConfirmTime,jdbcType=TIMESTAMP}, #{sendingConfirmState,jdbcType=INTEGER}, 
+      #{sendingComfirmOperator,jdbcType=VARCHAR}, #{sendingComfirmTime,jdbcType=TIMESTAMP}, 
+      #{sendingConfirmNotes,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{operator,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.macro.mall.model.OmsBucketGoodsDetail">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into oms_bucket_goods_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="localCust != null">
+        local_cust,
+      </if>
+      <if test="hkCust != null">
+        hk_cust,
+      </if>
+      <if test="orderLoadingId != null">
+        order_loading_id,
+      </if>
+      <if test="bucketId != null">
+        bucket_id,
+      </if>
+      <if test="custOrderId != null">
+        cust_order_id,
+      </if>
+      <if test="plateNumber != null">
+        plate_number,
+      </if>
+      <if test="goodType != null">
+        good_type,
+      </if>
+      <if test="packingType != null">
+        packing_type,
+      </if>
+      <if test="fclNumber != null">
+        fcl_number,
+      </if>
+      <if test="unitWeight != null">
+        unit_weight,
+      </if>
+      <if test="additionNumber != null">
+        addition_number,
+      </if>
+      <if test="additionWeight1 != null">
+        addition_weight1,
+      </if>
+      <if test="additionWeight2 != null">
+        addition_weight2,
+      </if>
+      <if test="totalNumber != null">
+        total_number,
+      </if>
+      <if test="totalWeight != null">
+        total_weight,
+      </if>
+      <if test="freightFee != null">
+        freight_fee,
+      </if>
+      <if test="loadingConfirmState != null">
+        loading_confirm_state,
+      </if>
+      <if test="loadingConfirmOperator != null">
+        loading_confirm_operator,
+      </if>
+      <if test="loadingConfirmTime != null">
+        loading_confirm_time,
+      </if>
+      <if test="sendingConfirmState != null">
+        sending_confirm_state,
+      </if>
+      <if test="sendingComfirmOperator != null">
+        sending_comfirm_operator,
+      </if>
+      <if test="sendingComfirmTime != null">
+        sending_comfirm_time,
+      </if>
+      <if test="sendingConfirmNotes != null">
+        sending_confirm_notes,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="localCust != null">
+        #{localCust,jdbcType=VARCHAR},
+      </if>
+      <if test="hkCust != null">
+        #{hkCust,jdbcType=VARCHAR},
+      </if>
+      <if test="orderLoadingId != null">
+        #{orderLoadingId,jdbcType=BIGINT},
+      </if>
+      <if test="bucketId != null">
+        #{bucketId,jdbcType=BIGINT},
+      </if>
+      <if test="custOrderId != null">
+        #{custOrderId,jdbcType=BIGINT},
+      </if>
+      <if test="plateNumber != null">
+        #{plateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="goodType != null">
+        #{goodType,jdbcType=VARCHAR},
+      </if>
+      <if test="packingType != null">
+        #{packingType,jdbcType=VARCHAR},
+      </if>
+      <if test="fclNumber != null">
+        #{fclNumber,jdbcType=INTEGER},
+      </if>
+      <if test="unitWeight != null">
+        #{unitWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="additionNumber != null">
+        #{additionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="additionWeight1 != null">
+        #{additionWeight1,jdbcType=DECIMAL},
+      </if>
+      <if test="additionWeight2 != null">
+        #{additionWeight2,jdbcType=DECIMAL},
+      </if>
+      <if test="totalNumber != null">
+        #{totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="totalWeight != null">
+        #{totalWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="freightFee != null">
+        #{freightFee,jdbcType=DECIMAL},
+      </if>
+      <if test="loadingConfirmState != null">
+        #{loadingConfirmState,jdbcType=INTEGER},
+      </if>
+      <if test="loadingConfirmOperator != null">
+        #{loadingConfirmOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="loadingConfirmTime != null">
+        #{loadingConfirmTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendingConfirmState != null">
+        #{sendingConfirmState,jdbcType=INTEGER},
+      </if>
+      <if test="sendingComfirmOperator != null">
+        #{sendingComfirmOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="sendingComfirmTime != null">
+        #{sendingComfirmTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendingConfirmNotes != null">
+        #{sendingConfirmNotes,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.macro.mall.model.OmsBucketGoodsDetailExample" resultType="java.lang.Long">
+    select count(*) from oms_bucket_goods_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update oms_bucket_goods_detail
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.localCust != null">
+        local_cust = #{row.localCust,jdbcType=VARCHAR},
+      </if>
+      <if test="row.hkCust != null">
+        hk_cust = #{row.hkCust,jdbcType=VARCHAR},
+      </if>
+      <if test="row.orderLoadingId != null">
+        order_loading_id = #{row.orderLoadingId,jdbcType=BIGINT},
+      </if>
+      <if test="row.bucketId != null">
+        bucket_id = #{row.bucketId,jdbcType=BIGINT},
+      </if>
+      <if test="row.custOrderId != null">
+        cust_order_id = #{row.custOrderId,jdbcType=BIGINT},
+      </if>
+      <if test="row.plateNumber != null">
+        plate_number = #{row.plateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="row.goodType != null">
+        good_type = #{row.goodType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.packingType != null">
+        packing_type = #{row.packingType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.fclNumber != null">
+        fcl_number = #{row.fclNumber,jdbcType=INTEGER},
+      </if>
+      <if test="row.unitWeight != null">
+        unit_weight = #{row.unitWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="row.additionNumber != null">
+        addition_number = #{row.additionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="row.additionWeight1 != null">
+        addition_weight1 = #{row.additionWeight1,jdbcType=DECIMAL},
+      </if>
+      <if test="row.additionWeight2 != null">
+        addition_weight2 = #{row.additionWeight2,jdbcType=DECIMAL},
+      </if>
+      <if test="row.totalNumber != null">
+        total_number = #{row.totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="row.totalWeight != null">
+        total_weight = #{row.totalWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="row.freightFee != null">
+        freight_fee = #{row.freightFee,jdbcType=DECIMAL},
+      </if>
+      <if test="row.loadingConfirmState != null">
+        loading_confirm_state = #{row.loadingConfirmState,jdbcType=INTEGER},
+      </if>
+      <if test="row.loadingConfirmOperator != null">
+        loading_confirm_operator = #{row.loadingConfirmOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="row.loadingConfirmTime != null">
+        loading_confirm_time = #{row.loadingConfirmTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.sendingConfirmState != null">
+        sending_confirm_state = #{row.sendingConfirmState,jdbcType=INTEGER},
+      </if>
+      <if test="row.sendingComfirmOperator != null">
+        sending_comfirm_operator = #{row.sendingComfirmOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="row.sendingComfirmTime != null">
+        sending_comfirm_time = #{row.sendingComfirmTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.sendingConfirmNotes != null">
+        sending_confirm_notes = #{row.sendingConfirmNotes,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        update_time = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.operator != null">
+        operator = #{row.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update oms_bucket_goods_detail
+    set id = #{row.id,jdbcType=BIGINT},
+      local_cust = #{row.localCust,jdbcType=VARCHAR},
+      hk_cust = #{row.hkCust,jdbcType=VARCHAR},
+      order_loading_id = #{row.orderLoadingId,jdbcType=BIGINT},
+      bucket_id = #{row.bucketId,jdbcType=BIGINT},
+      cust_order_id = #{row.custOrderId,jdbcType=BIGINT},
+      plate_number = #{row.plateNumber,jdbcType=VARCHAR},
+      good_type = #{row.goodType,jdbcType=VARCHAR},
+      packing_type = #{row.packingType,jdbcType=VARCHAR},
+      fcl_number = #{row.fclNumber,jdbcType=INTEGER},
+      unit_weight = #{row.unitWeight,jdbcType=DECIMAL},
+      addition_number = #{row.additionNumber,jdbcType=INTEGER},
+      addition_weight1 = #{row.additionWeight1,jdbcType=DECIMAL},
+      addition_weight2 = #{row.additionWeight2,jdbcType=DECIMAL},
+      total_number = #{row.totalNumber,jdbcType=INTEGER},
+      total_weight = #{row.totalWeight,jdbcType=DECIMAL},
+      freight_fee = #{row.freightFee,jdbcType=DECIMAL},
+      loading_confirm_state = #{row.loadingConfirmState,jdbcType=INTEGER},
+      loading_confirm_operator = #{row.loadingConfirmOperator,jdbcType=VARCHAR},
+      loading_confirm_time = #{row.loadingConfirmTime,jdbcType=TIMESTAMP},
+      sending_confirm_state = #{row.sendingConfirmState,jdbcType=INTEGER},
+      sending_comfirm_operator = #{row.sendingComfirmOperator,jdbcType=VARCHAR},
+      sending_comfirm_time = #{row.sendingComfirmTime,jdbcType=TIMESTAMP},
+      sending_confirm_notes = #{row.sendingConfirmNotes,jdbcType=VARCHAR},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      update_time = #{row.updateTime,jdbcType=TIMESTAMP},
+      operator = #{row.operator,jdbcType=VARCHAR},
+      state = #{row.state,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.macro.mall.model.OmsBucketGoodsDetail">
+    update oms_bucket_goods_detail
+    <set>
+      <if test="localCust != null">
+        local_cust = #{localCust,jdbcType=VARCHAR},
+      </if>
+      <if test="hkCust != null">
+        hk_cust = #{hkCust,jdbcType=VARCHAR},
+      </if>
+      <if test="orderLoadingId != null">
+        order_loading_id = #{orderLoadingId,jdbcType=BIGINT},
+      </if>
+      <if test="bucketId != null">
+        bucket_id = #{bucketId,jdbcType=BIGINT},
+      </if>
+      <if test="custOrderId != null">
+        cust_order_id = #{custOrderId,jdbcType=BIGINT},
+      </if>
+      <if test="plateNumber != null">
+        plate_number = #{plateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="goodType != null">
+        good_type = #{goodType,jdbcType=VARCHAR},
+      </if>
+      <if test="packingType != null">
+        packing_type = #{packingType,jdbcType=VARCHAR},
+      </if>
+      <if test="fclNumber != null">
+        fcl_number = #{fclNumber,jdbcType=INTEGER},
+      </if>
+      <if test="unitWeight != null">
+        unit_weight = #{unitWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="additionNumber != null">
+        addition_number = #{additionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="additionWeight1 != null">
+        addition_weight1 = #{additionWeight1,jdbcType=DECIMAL},
+      </if>
+      <if test="additionWeight2 != null">
+        addition_weight2 = #{additionWeight2,jdbcType=DECIMAL},
+      </if>
+      <if test="totalNumber != null">
+        total_number = #{totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="totalWeight != null">
+        total_weight = #{totalWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="freightFee != null">
+        freight_fee = #{freightFee,jdbcType=DECIMAL},
+      </if>
+      <if test="loadingConfirmState != null">
+        loading_confirm_state = #{loadingConfirmState,jdbcType=INTEGER},
+      </if>
+      <if test="loadingConfirmOperator != null">
+        loading_confirm_operator = #{loadingConfirmOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="loadingConfirmTime != null">
+        loading_confirm_time = #{loadingConfirmTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendingConfirmState != null">
+        sending_confirm_state = #{sendingConfirmState,jdbcType=INTEGER},
+      </if>
+      <if test="sendingComfirmOperator != null">
+        sending_comfirm_operator = #{sendingComfirmOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="sendingComfirmTime != null">
+        sending_comfirm_time = #{sendingComfirmTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendingConfirmNotes != null">
+        sending_confirm_notes = #{sendingConfirmNotes,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.macro.mall.model.OmsBucketGoodsDetail">
+    update oms_bucket_goods_detail
+    set local_cust = #{localCust,jdbcType=VARCHAR},
+      hk_cust = #{hkCust,jdbcType=VARCHAR},
+      order_loading_id = #{orderLoadingId,jdbcType=BIGINT},
+      bucket_id = #{bucketId,jdbcType=BIGINT},
+      cust_order_id = #{custOrderId,jdbcType=BIGINT},
+      plate_number = #{plateNumber,jdbcType=VARCHAR},
+      good_type = #{goodType,jdbcType=VARCHAR},
+      packing_type = #{packingType,jdbcType=VARCHAR},
+      fcl_number = #{fclNumber,jdbcType=INTEGER},
+      unit_weight = #{unitWeight,jdbcType=DECIMAL},
+      addition_number = #{additionNumber,jdbcType=INTEGER},
+      addition_weight1 = #{additionWeight1,jdbcType=DECIMAL},
+      addition_weight2 = #{additionWeight2,jdbcType=DECIMAL},
+      total_number = #{totalNumber,jdbcType=INTEGER},
+      total_weight = #{totalWeight,jdbcType=DECIMAL},
+      freight_fee = #{freightFee,jdbcType=DECIMAL},
+      loading_confirm_state = #{loadingConfirmState,jdbcType=INTEGER},
+      loading_confirm_operator = #{loadingConfirmOperator,jdbcType=VARCHAR},
+      loading_confirm_time = #{loadingConfirmTime,jdbcType=TIMESTAMP},
+      sending_confirm_state = #{sendingConfirmState,jdbcType=INTEGER},
+      sending_comfirm_operator = #{sendingComfirmOperator,jdbcType=VARCHAR},
+      sending_comfirm_time = #{sendingComfirmTime,jdbcType=TIMESTAMP},
+      sending_confirm_notes = #{sendingConfirmNotes,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

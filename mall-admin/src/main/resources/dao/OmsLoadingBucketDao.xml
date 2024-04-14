@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.dao.OmsLoadingBucketDao">
+    <resultMap id="omsOrderLoadingResult" type="com.macro.mall.dto.OmsOrderLoadingResult"
+               extends="com.macro.mall.mapper.OmsOrderLoadingMapper.BaseResultMap">
+        <result column="min_state" jdbcType="INTEGER" property="minState"/>
+        <result column="max_state" jdbcType="INTEGER" property="maxState"/>
+        <collection property="bucketDetailList" resultMap="bucketDetailResult" columnPrefix="b_"/>
+    </resultMap>
+    <resultMap id="goodsExportResult" type="com.macro.mall.dto.OmsGoodsExportResult">
+        <result column="loading_no" jdbcType="VARCHAR" property="loadingNo"/>
+        <result column="loading_date" jdbcType="DATE" property="loadingDate"/>
+        <result column="plate_number" jdbcType="VARCHAR" property="plateNumber"/>
+        <result column="export_company" jdbcType="VARCHAR" property="exportCompany"/>
+        <collection property="goodsExportList"
+                    resultMap="com.macro.mall.mapper.OmsBucketGoodsDetailMapper.BaseResultMap" columnPrefix="d_"/>
+    </resultMap>
+
+    <resultMap id="bucketDetailResult" type="com.macro.mall.dto.OmsBucketDetailDto"
+               extends="com.macro.mall.mapper.OmsOrderLoadingBucketMapper.BaseResultMap">
+        <collection property="goodsDetailList"
+                    resultMap="com.macro.mall.mapper.OmsBucketGoodsDetailMapper.BaseResultMap" columnPrefix="g_"/>
+    </resultMap>
+    <resultMap id="unLoadingGoodsResult" type="com.macro.mall.dto.OmsUnpackingGoodsResult">
+        <result column="diff_weight" javaType="java.math.BigDecimal" property="diffWeight"/>
+        <result column="diff_number" javaType="INTEGER" property="diffNumber"/>
+    </resultMap>
+    <resultMap id="settlementResult" type="com.macro.mall.dto.OmsSettlementResult">
+        <result column="loading_date" jdbcType="DATE" property="loadingDate" />
+        <result column="local_cust" jdbcType="VARCHAR" property="localCust" />
+        <result column="plate_number" jdbcType="VARCHAR" property="plateNumber" />
+        <result column="loading_no" jdbcType="VARCHAR" property="loadingNo" />
+        <result column="good_type" jdbcType="VARCHAR" property="goodType" />
+        <result column="packing_type" jdbcType="VARCHAR" property="packingType" />
+        <result column="freight_fee" jdbcType="DECIMAL" property="freightFee" />
+        <result column="total_weight" jdbcType="DECIMAL" property="totalWeight" />
+        <result column="total_number" jdbcType="INTEGER" property="totalNumber" />
+        <result column="bucket_no" jdbcType="INTEGER" property="bucketNo" />
+        <result column="notes" jdbcType="INTEGER" property="notes" />
+    </resultMap>
+    <resultMap id="weekSummaryResult" type="com.macro.mall.dto.OmsLoadingWeekSummaryResult">
+        <result column="loading_date" jdbcType="DATE" property="loadingDate" />
+        <result column="local_cust" jdbcType="VARCHAR" property="localCust" />
+        <result column="freight_fee" jdbcType="DECIMAL" property="freightFee" />
+        <result column="total_weight" jdbcType="DECIMAL" property="totalWeight" />
+        <result column="total_number" jdbcType="INTEGER" property="totalNumber" />
+    </resultMap>
+
+
+
+    <!--运单配载列表-->
+    <!-- 车辆状态以货物状态为主，如有新增货物进来，状态即改变 -->
+    <select id="list" parameterType="com.macro.mall.dto.OmsBucketDetailQueryParam" resultMap="omsOrderLoadingResult">
+        SELECT * FROM (
+        SELECT l.id id,
+        l.loading_no loading_no,
+        l.plate_number plate_number,
+        l.loading_date loading_date,
+        l.create_time create_time,
+        l.state state,
+        (select min(d.state) from oms_bucket_goods_detail d where d.order_loading_id = l.id and d.state != 0) min_state,
+        (select max(d.state) from oms_bucket_goods_detail d where d.order_loading_id = l.id and d.state != 0) max_state,
+        (select sum(d.total_number) from oms_bucket_goods_detail d where d.order_loading_id = l.id and d.state != 0)
+        total_number,
+        (select sum(d.total_weight) from oms_bucket_goods_detail d where d.order_loading_id = l.id and d.state != 0)
+        total_weight,
+        (select sum(d.freight_fee) from oms_bucket_goods_detail d where d.order_loading_id = l.id and d.state != 0)
+        freight_fee,
+        b.id b_id,
+        b.order_loading_id b_order_loading_id,
+        b.plate_number b_plate_number,
+        b.bucket_no b_bucket_no,
+        b.export_company b_export_company,
+        g.id b_g_id,
+        g.local_cust b_g_local_cust,
+        g.hk_cust b_g_hk_cust,
+        g.order_loading_id b_g_order_loading_id,
+        g.bucket_id b_g_bucket_id,
+        g.plate_number b_g_plate_number,
+        g.good_type b_g_good_type,
+        g.packing_type b_g_packing_type,
+        g.fcl_number b_g_fcl_number,
+        g.unit_weight b_g_unit_weight,
+        g.addition_number b_g_addition_number,
+        g.addition_weight1 b_g_addition_weight1,
+        g.addition_weight2 b_g_addition_weight2,
+        g.total_number b_g_total_number,
+        g.total_weight b_g_total_weight,
+        g.freight_fee b_g_freight_fee,
+        g.loading_confirm_state b_g_loading_confirm_state,
+        g.sending_confirm_state b_g_sending_confirm_state,
+        g.sending_comfirm_operator b_g_sending_comfirm_operator,
+        g.sending_confirm_notes b_g_sending_confirm_notes,
+        g.state b_g_state,
+        g.update_time update_time,
+        g.operator operator
+        FROM oms_order_loading l left join
+        oms_order_loading_bucket b on l.id = b.order_loading_id
+        left join oms_bucket_goods_detail g on b.order_loading_id = g.order_loading_id and b.id = g.bucket_id
+        WHERE 1=1
+        <if test="queryParam != null">
+            <include refid="Param_Where_Clause"/>
+        </if>
+        ) t WHERE 1=1
+        <if test="queryParam.orderState!=null and queryParam.orderState.size()!=0">
+            AND t.min_state IN
+            <foreach collection="queryParam.orderState" item="state" separator="," open="(" close=")">
+                #{state}
+            </foreach>
+        </if>
+        ORDER BY t.id DESC
+
+    </select>
+
+    <!--运单配载详情-->
+    <select id="info" parameterType="java.lang.Long" resultMap="bucketDetailResult">
+        SELECT b.id                    id,
+               b.order_loading_id      order_loading_id,
+               b.plate_number          plate_number,
+               b.bucket_no             bucket_no,
+               b.export_company        export_company,
+               g.id                    g_id,
+               g.local_cust            g_local_cust,
+               g.hk_cust               g_hk_cust,
+               g.order_loading_id      g_order_loading_id,
+               g.bucket_id             g_bucket_id,
+               g.plate_number          g_plate_number,
+               g.good_type             g_good_type,
+               g.packing_type          g_packing_type,
+               g.fcl_number            g_fcl_number,
+               g.unit_weight           g_unit_weight,
+               g.addition_number       g_addition_number,
+               g.addition_weight1      g_addition_weight1,
+               g.addition_weight2      g_addition_weight2,
+               g.total_number          g_total_number,
+               g.total_weight          g_total_weight,
+               g.loading_confirm_state g_loading_confirm_state,
+               g.sending_confirm_state g_sending_confirm_state,
+               g.sending_confirm_notes g_sending_confirm_notes,
+               g.state                 g_state
+        FROM oms_order_loading_bucket b
+                 left join
+             oms_bucket_goods_detail g on b.order_loading_id = g.order_loading_id
+                 AND b.id = g.bucket_id
+        WHERE b.id = #{id, jdbcType=BIGINT}
+    </select>
+
+    <!--未配载的客户信息-->
+    <select id="getUnLoadingGoods" parameterType="com.macro.mall.dto.OmsUnLoadingGoodsQueryParam"
+            resultMap="unLoadingGoodsResult">
+        SELECT c.total_weight - sum(IFNULL(d.total_weight, 0)) diff_weight,
+               c.total_number - sum(IFNULL(d.total_number, 0)) diff_number
+        FROM oms_cust_order c
+                 LEFT JOIN oms_order_loading l
+                           ON c.order_date = l.loading_date
+                 LEFT JOIN oms_bucket_goods_detail d
+                           ON l.id = d.order_loading_id AND c.local_cust = d.local_cust AND c.hk_cust = d.hk_cust
+                               AND c.good_type = d.good_type AND c.packing_type = d.packing_type
+        WHERE c.order_date = #{queryParam.loadingDate}
+          AND c.local_cust = #{queryParam.localCust}
+          AND c.hk_cust = #{queryParam.hkCust}
+          AND c.good_type = #{queryParam.goodType}
+          AND c.packing_type = #{queryParam.packingType}
+        GROUP BY c.order_date, c.local_cust, c.hk_cust, c.good_type, c.packing_type;
+    </select>
+
+    <!--报关单-->
+    <select id="getCustDeclarationInfo" parameterType="java.lang.Long"
+            resultMap="goodsExportResult">
+        SELECT l.loading_no        loading_no,
+               l.loading_date      loading_date,
+               l.plate_number      plate_number,
+               b.export_company    export_company,
+               e.enum_map_value    d_good_type,
+               SUM(d.total_number) d_total_number,
+               SUM(d.total_weight) d_total_weight
+        FROM oms_order_loading l,
+             oms_order_loading_bucket b,
+             oms_bucket_goods_detail d,
+             sys_enum e
+        WHERE l.id = b.order_loading_id
+          AND l.id = d.order_loading_id
+          AND b.id = d.bucket_id
+          AND e.enum_type = 'GOOD_TYPE'
+          AND d.good_type = e.enum_value
+          AND l.id = #{id,jdbcType=BIGINT}
+        GROUP BY l.loading_date, d.plate_number, b.export_company, e.enum_map_value;
+    </select>
+
+    <!--客户维度对账单-->
+    <select id="custSettlement" parameterType="com.macro.mall.dto.OmsBucketDetailQueryParam"
+            resultMap="settlementResult">
+        select l.loading_date,
+        g.local_cust,
+        g.good_type,
+        sum(g.freight_fee) freight_fee,
+        sum(g.total_weight) total_weight,
+        sum(g.total_number) total_number,
+        group_concat(distinct l.plate_number) plate_number,
+        group_concat(distinct b.bucket_no) bucket_no,
+        group_concat(g.sending_confirm_notes) notes
+        from oms_order_loading l, oms_order_loading_bucket b, oms_bucket_goods_detail g
+        where l.id = g.order_loading_id and l.id = g.order_loading_id and b.id = g.bucket_id
+        <if test="queryParam != null">
+            <include refid="Param_Where_Clause"/>
+        </if>
+        and g.state > 2
+        group by l.loading_date, g.local_cust, g.good_type
+        order by l.loading_date desc, g.local_cust desc;
+    </select>
+
+    <!--车辆对账单-->
+    <select id="vechileSettlement" parameterType="com.macro.mall.dto.OmsBucketDetailQueryParam"
+            resultMap="settlementResult">
+        select l.loading_date,
+        l.loading_no,
+        g.plate_number,
+        g.packing_type,
+        sum(g.freight_fee) freight_fee,
+        sum(g.total_weight) total_weight,
+        sum(g.total_number) total_number,
+        group_concat(g.sending_confirm_notes) notes
+        from oms_order_loading l, oms_order_loading_bucket b, oms_bucket_goods_detail g
+        where l.id = b.order_loading_id and l.id = g.order_loading_id and b.id = g.bucket_id
+        <if test="queryParam != null">
+            <include refid="Param_Where_Clause"/>
+        </if>
+        and g.state > 2
+        group by l.loading_date, g.plate_number, g.packing_type
+        order by l.loading_date desc, g.plate_number desc;
+    </select>
+
+    <select id="getCurrSummary" parameterType="java.lang.String"
+            resultMap="com.macro.mall.mapper.OmsBucketGoodsDetailMapper.BaseResultMap">
+        select d.good_type good_type, sum(d.total_number) total_number, sum(d.total_weight) total_weight, sum(d.freight_fee)   freight_fee
+        from oms_order_loading l,
+             oms_bucket_goods_detail d
+        where l.id = d.order_loading_id
+          and d.state > 0
+          and l.loading_date =  #{currDate,jdbcType=DATE}
+        group by d.good_type
+    </select>
+
+    <select id="getLastWeekSummary" parameterType="java.lang.String"
+            resultMap="weekSummaryResult">
+        select t.datelist          loading_date,
+               d.local_cust        local_cust,
+               sum(d.total_number) total_number,
+               sum(d.total_weight) total_weight,
+               sum(d.freight_fee)  freight_fee
+        from date_table t
+                 left join oms_order_loading l on l.loading_date = t.datelist
+                 left join oms_bucket_goods_detail d on l.id = d.order_loading_id and d.state > 0
+        where t.datelist between #{currDate,jdbcType=DATE} and ADDDATE(#{currDate,jdbcType=DATE}, 7)
+        group by l.loading_date, d.local_cust
+    </select>
+    <sql id="Param_Where_Clause">
+        <if test="queryParam.id!=null">
+            AND l.id = #{queryParam.id}
+        </if>
+        <if test="queryParam.bucketId!=null">
+            AND b.id = #{queryParam.bucketId}
+        </if>
+        <if test="queryParam.plateNumber!=null and queryParam.plateNumber!=''">
+            AND g.plate_number = #{queryParam.plateNumber}
+        </if>
+        <if test="queryParam.bucketNo!=null and queryParam.bucketNo!=''">
+            AND b.bucket_no = #{queryParam.bucketNo}
+        </if>
+        <if test="queryParam.localCust!=null and queryParam.localCust!=''">
+            AND g.local_cust = #{queryParam.localCust}
+        </if>
+        <if test="queryParam.hkCust!=null and queryParam.hkCust!=''">
+            AND g.hk_cust = #{queryParam.hkCust}
+        </if>
+        <if test="queryParam.goodType!=null and queryParam.goodType!=''">
+            AND g.good_type = #{queryParam.goodType}
+        </if>
+        <if test="queryParam.loadingNo!=null and queryParam.loadingNo!=''">
+            AND l.loading_no = #{queryParam.loadingNo}
+        </if>
+        <if test="queryParam.orderDateStart!=null and queryParam.orderDateStart!=''">
+            AND l.loading_date &gt;= CONCAT(#{queryParam.orderDateStart},' 00:00:00')
+        </if>
+        <if test="queryParam.orderDateEnd!=null and queryParam.orderDateEnd!=''">
+            AND l.loading_date &lt;= CONCAT(#{queryParam.orderDateEnd},' 23:59:59')
+        </if>
+    </sql>
+</mapper>

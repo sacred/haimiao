@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.mapper.SysEnumMapper">
+  <resultMap id="BaseResultMap" type="com.macro.mall.model.SysEnum">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enum_type" jdbcType="VARCHAR" property="enumType" />
+    <result column="enum_code" jdbcType="VARCHAR" property="enumCode" />
+    <result column="enum_value" jdbcType="VARCHAR" property="enumValue" />
+    <result column="enum_map_value" jdbcType="VARCHAR" property="enumMapValue" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, enum_type, enum_code, enum_value, enum_map_value, sort, state, operator, create_time, 
+    update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.macro.mall.model.SysEnumExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_enum
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_enum
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_enum
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.macro.mall.model.SysEnumExample">
+    delete from sys_enum
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.macro.mall.model.SysEnum">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_enum (enum_type, enum_code, enum_value, 
+      enum_map_value, sort, state, 
+      operator, create_time, update_time
+      )
+    values (#{enumType,jdbcType=VARCHAR}, #{enumCode,jdbcType=VARCHAR}, #{enumValue,jdbcType=VARCHAR}, 
+      #{enumMapValue,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, 
+      #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.macro.mall.model.SysEnum">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_enum
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="enumType != null">
+        enum_type,
+      </if>
+      <if test="enumCode != null">
+        enum_code,
+      </if>
+      <if test="enumValue != null">
+        enum_value,
+      </if>
+      <if test="enumMapValue != null">
+        enum_map_value,
+      </if>
+      <if test="sort != null">
+        sort,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="enumType != null">
+        #{enumType,jdbcType=VARCHAR},
+      </if>
+      <if test="enumCode != null">
+        #{enumCode,jdbcType=VARCHAR},
+      </if>
+      <if test="enumValue != null">
+        #{enumValue,jdbcType=VARCHAR},
+      </if>
+      <if test="enumMapValue != null">
+        #{enumMapValue,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.macro.mall.model.SysEnumExample" resultType="java.lang.Long">
+    select count(*) from sys_enum
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update sys_enum
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.enumType != null">
+        enum_type = #{row.enumType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.enumCode != null">
+        enum_code = #{row.enumCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.enumValue != null">
+        enum_value = #{row.enumValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.enumMapValue != null">
+        enum_map_value = #{row.enumMapValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.sort != null">
+        sort = #{row.sort,jdbcType=INTEGER},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=INTEGER},
+      </if>
+      <if test="row.operator != null">
+        operator = #{row.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        update_time = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sys_enum
+    set id = #{row.id,jdbcType=BIGINT},
+      enum_type = #{row.enumType,jdbcType=VARCHAR},
+      enum_code = #{row.enumCode,jdbcType=VARCHAR},
+      enum_value = #{row.enumValue,jdbcType=VARCHAR},
+      enum_map_value = #{row.enumMapValue,jdbcType=VARCHAR},
+      sort = #{row.sort,jdbcType=INTEGER},
+      state = #{row.state,jdbcType=INTEGER},
+      operator = #{row.operator,jdbcType=VARCHAR},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      update_time = #{row.updateTime,jdbcType=TIMESTAMP}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.macro.mall.model.SysEnum">
+    update sys_enum
+    <set>
+      <if test="enumType != null">
+        enum_type = #{enumType,jdbcType=VARCHAR},
+      </if>
+      <if test="enumCode != null">
+        enum_code = #{enumCode,jdbcType=VARCHAR},
+      </if>
+      <if test="enumValue != null">
+        enum_value = #{enumValue,jdbcType=VARCHAR},
+      </if>
+      <if test="enumMapValue != null">
+        enum_map_value = #{enumMapValue,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.macro.mall.model.SysEnum">
+    update sys_enum
+    set enum_type = #{enumType,jdbcType=VARCHAR},
+      enum_code = #{enumCode,jdbcType=VARCHAR},
+      enum_value = #{enumValue,jdbcType=VARCHAR},
+      enum_map_value = #{enumMapValue,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      operator = #{operator,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
