@@ -16,7 +16,7 @@ spring:
     host: 172.19.71.155 # Redis服务器地址
     database: 2 # Redis数据库索引（默认为0）
     port: 63790 # Redis服务器连接端口
-    password: # Redis服务器连接密码（默认为空）
+    password: Wsacred#123_ # Redis服务器连接密码（默认为空）
     timeout: 300ms # 连接超时时间（毫秒）
 
 minio:

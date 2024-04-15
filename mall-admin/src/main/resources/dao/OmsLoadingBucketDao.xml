@@ -232,7 +232,7 @@
 
     <select id="getCurrSummary" parameterType="java.lang.String"
             resultMap="com.macro.mall.mapper.OmsBucketGoodsDetailMapper.BaseResultMap">
-        select d.good_type good_type, sum(d.total_number) total_number, sum(d.total_weight) total_weight, sum(d.freight_fee)   freight_fee
+        select d.good_type good_type, sum(ifnull(d.total_number, 0)) total_number, sum(ifnull(d.total_weight, 0)) total_weight, sum(ifnull(d.freight_fee, 0))   freight_fee
         from oms_order_loading l,
              oms_bucket_goods_detail d
         where l.id = d.order_loading_id
@@ -243,16 +243,26 @@
 
     <select id="getLastWeekSummary" parameterType="java.lang.String"
             resultMap="weekSummaryResult">
-        select t.datelist          loading_date,
-               d.local_cust        local_cust,
-               sum(d.total_number) total_number,
-               sum(d.total_weight) total_weight,
-               sum(d.freight_fee)  freight_fee
+        select t.datelist loading_date,
+               t1.local_cust,
+               t1.total_number,
+               t1.total_weight,
+               t1.freight_fee
         from date_table t
-                 left join oms_order_loading l on l.loading_date = t.datelist
-                 left join oms_bucket_goods_detail d on l.id = d.order_loading_id and d.state > 0
-        where t.datelist between #{currDate,jdbcType=DATE} and ADDDATE(#{currDate,jdbcType=DATE}, 7)
-        group by l.loading_date, d.local_cust
+                 left join (
+            select l.loading_date,
+                   d.local_cust,
+                   sum(ifnull(d.total_number, 0)) total_number,
+                   sum(ifnull(d.total_weight, 0)) total_weight,
+                   sum(ifnull(d.freight_fee, 0))  freight_fee
+            from oms_order_loading l,
+                 oms_bucket_goods_detail d
+            where l.id = d.order_loading_id
+              and d.state > 0
+              and l.loading_date between ADDDATE(#{currDate,jdbcType=DATE}, -7) and #{currDate,jdbcType=DATE}
+            group by l.loading_date, d.local_cust) t1
+                           on t.datelist = t1.loading_date
+        where t.datelist between ADDDATE(#{currDate,jdbcType=DATE}, -7) and #{currDate,jdbcType=DATE}
     </select>
     <sql id="Param_Where_Clause">
         <if test="queryParam.id!=null">
