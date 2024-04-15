@@ -46,7 +46,8 @@ public class OmsBucketGoodsDetailController {
     }
 
     @ApiOperation("车辆配载桶位列表")
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method
+            = RequestMethod.POST)
     private CommonResult<List<OmsOrderLoadingResult>> listOrderLoading(OmsBucketDetailQueryParam queryParam) {
         List<OmsOrderLoadingResult> bucketDetailDtoList = loadingBucketService.list(queryParam);
         return CommonResult.success(bucketDetailDtoList);
