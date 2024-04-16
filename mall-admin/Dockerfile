@@ -11,3 +11,4 @@ ENTRYPOINT ["java", "-jar","/mall-admin-1.0-SNAPSHOT.jar"]
 
 #docker build . -t sacred02/haimiao:latest
 #docker push sacred02/haimiao:latest
+#docker run -d --restart=always --name  haimiao -p8080:8080 sacred02/haimiao:latest

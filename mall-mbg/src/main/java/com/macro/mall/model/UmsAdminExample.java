@@ -305,6 +305,136 @@ public class UmsAdminExample {
             return (Criteria) this;
         }
 
+        public Criteria andUserTypeIsNull() {
+            addCriterion("user_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserTypeIsNotNull() {
+            addCriterion("user_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserTypeEqualTo(Integer value) {
+            addCriterion("user_type =", value, "userType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserTypeNotEqualTo(Integer value) {
+            addCriterion("user_type <>", value, "userType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserTypeGreaterThan(Integer value) {
+            addCriterion("user_type >", value, "userType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("user_type >=", value, "userType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserTypeLessThan(Integer value) {
+            addCriterion("user_type <", value, "userType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("user_type <=", value, "userType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserTypeIn(List<Integer> values) {
+            addCriterion("user_type in", values, "userType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserTypeNotIn(List<Integer> values) {
+            addCriterion("user_type not in", values, "userType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserTypeBetween(Integer value1, Integer value2) {
+            addCriterion("user_type between", value1, value2, "userType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("user_type not between", value1, value2, "userType");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelIsNull() {
+            addCriterion("extend_rel is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelIsNotNull() {
+            addCriterion("extend_rel is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelEqualTo(String value) {
+            addCriterion("extend_rel =", value, "extendRel");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelNotEqualTo(String value) {
+            addCriterion("extend_rel <>", value, "extendRel");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelGreaterThan(String value) {
+            addCriterion("extend_rel >", value, "extendRel");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelGreaterThanOrEqualTo(String value) {
+            addCriterion("extend_rel >=", value, "extendRel");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelLessThan(String value) {
+            addCriterion("extend_rel <", value, "extendRel");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelLessThanOrEqualTo(String value) {
+            addCriterion("extend_rel <=", value, "extendRel");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelLike(String value) {
+            addCriterion("extend_rel like", value, "extendRel");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelNotLike(String value) {
+            addCriterion("extend_rel not like", value, "extendRel");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelIn(List<String> values) {
+            addCriterion("extend_rel in", values, "extendRel");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelNotIn(List<String> values) {
+            addCriterion("extend_rel not in", values, "extendRel");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelBetween(String value1, String value2) {
+            addCriterion("extend_rel between", value1, value2, "extendRel");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtendRelNotBetween(String value1, String value2) {
+            addCriterion("extend_rel not between", value1, value2, "extendRel");
+            return (Criteria) this;
+        }
+
         public Criteria andIconIsNull() {
             addCriterion("icon is null");
             return (Criteria) this;

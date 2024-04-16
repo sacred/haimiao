@@ -11,6 +11,12 @@ public class UmsAdmin implements Serializable {
 
     private String password;
 
+    @ApiModelProperty(value = "用户类型：1员工，2客户，3司机")
+    private Integer userType;
+
+    @ApiModelProperty(value = "关联信息：关联客户；司机关联车辆")
+    private String extendRel;
+
     @ApiModelProperty(value = "头像")
     private String icon;
 
@@ -56,6 +62,22 @@ public class UmsAdmin implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
+    public String getExtendRel() {
+        return extendRel;
+    }
+
+    public void setExtendRel(String extendRel) {
+        this.extendRel = extendRel;
     }
 
     public String getIcon() {
@@ -123,6 +145,8 @@ public class UmsAdmin implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", username=").append(username);
         sb.append(", password=").append(password);
+        sb.append(", userType=").append(userType);
+        sb.append(", extendRel=").append(extendRel);
         sb.append(", icon=").append(icon);
         sb.append(", email=").append(email);
         sb.append(", nickName=").append(nickName);

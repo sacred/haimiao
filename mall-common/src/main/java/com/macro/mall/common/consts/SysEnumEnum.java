@@ -19,6 +19,7 @@ public enum SysEnumEnum {
     PLATE_NUMBER("PLATE_NUMBER", "车牌号码"),
     EXPORT_COMPANY("EXPORT_COMPANY", "出口公司"),
     BUCKET_NO("BUCKET_NO", "桶位"),
+    USER_TYPE("USER_TYPE", "用户类型"),
     ;
 
     private String type;
