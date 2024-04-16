@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * 用户注册参数
@@ -20,6 +21,11 @@ public class UmsAdminParam {
     @NotEmpty
     @ApiModelProperty(value = "密码", required = true)
     private String password;
+    @NotNull
+    @ApiModelProperty(value = "用户类型", required = true)
+    private Integer userType;
+    @ApiModelProperty(value = "关联信息")
+    private String extendRel;
     @ApiModelProperty(value = "用户头像")
     private String icon;
     @Email
