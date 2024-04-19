@@ -4,15 +4,15 @@ import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.PageHelper;
 import com.macro.mall.common.consts.CustOrderStateEnum;
 import com.macro.mall.common.consts.SysEnumEnum;
+import com.macro.mall.common.exception.ApiException;
 import com.macro.mall.common.service.RedisService;
 import com.macro.mall.dao.OmsCustOrderDao;
-import com.macro.mall.dto.OmsCustOrderDto;
-import com.macro.mall.dto.OmsCustOrderQueryParam;
-import com.macro.mall.dto.OmsCustOrderSettlementResult;
+import com.macro.mall.dto.*;
 import com.macro.mall.mapper.OmsCustOrderMapper;
 import com.macro.mall.model.OmsCustOrder;
 import com.macro.mall.service.IdRuleGenerator;
 import com.macro.mall.service.OmsCustOrderService;
+import com.macro.mall.service.OmsLoadingBucketService;
 import com.macro.mall.service.SysEnumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,6 +40,8 @@ public class OmsCustOrderServiceImpl implements OmsCustOrderService {
     OmsCustOrderMapper custOrderMapper;
     @Autowired
     OmsCustOrderDao custOrderDao;
+    @Autowired
+    OmsLoadingBucketService loadingBucketService;
 
     @Override
     public int create(OmsCustOrderDto custOrderDto) {
@@ -61,18 +63,38 @@ public class OmsCustOrderServiceImpl implements OmsCustOrderService {
 
     @Override
     public int cancel(Long id, String remark) {
-        OmsCustOrder omsCustOrder = new OmsCustOrder();
-        omsCustOrder.setId(id);
-        omsCustOrder.setRemark(remark);
-        //取消下单
-        omsCustOrder.setState(CustOrderStateEnum.CACEL.getCode());
-        return custOrderMapper.updateByPrimaryKeySelective(omsCustOrder);
+        OmsCustOrder custOrder = custOrderMapper.selectByPrimaryKey(id);
+        OmsUnLoadingGoodsQueryParam param = new OmsUnLoadingGoodsQueryParam();
+        BeanUtil.copyProperties(custOrder, param);
+        param.setLoadingDate(custOrder.getOrderDate());
+        OmsUnpackingGoodsResult unPackGoods = loadingBucketService.getUnLoadingGoods(param);
+        //取消下单和更新客户订单数量，需要检查不能小于已经装货确认的数量，匹配当天数据
+        if (custOrder.getTotalNumber() <= unPackGoods.getDiffNumber() && custOrder.getTotalWeight().compareTo(unPackGoods.getDiffWeight()) <= 0) {
+            OmsCustOrder omsCustOrder = new OmsCustOrder();
+            omsCustOrder.setId(id);
+            omsCustOrder.setRemark(remark);
+            //取消下单
+            omsCustOrder.setState(CustOrderStateEnum.CACEL.getCode());
+            return custOrderMapper.updateByPrimaryKeySelective(omsCustOrder);
+        } else {
+            throw new ApiException("订单已配载，不允许取消，请电话沟通！");
+        }
     }
 
     @Override
     public int update(OmsCustOrder omsCustOrder) {
         calculateData(omsCustOrder);
-        return custOrderMapper.updateByPrimaryKeySelective(omsCustOrder);
+        OmsCustOrder oldCustOrder = custOrderMapper.selectByPrimaryKey(omsCustOrder.getId());
+        OmsUnLoadingGoodsQueryParam param = new OmsUnLoadingGoodsQueryParam();
+        BeanUtil.copyProperties(oldCustOrder, param);
+        param.setLoadingDate(oldCustOrder.getOrderDate());
+        OmsUnpackingGoodsResult unPackGoods = loadingBucketService.getUnLoadingGoods(param);
+        //取消下单和更新客户订单数量，需要检查不能小于已经装货确认的数量，匹配当天数据
+        if ((oldCustOrder.getTotalNumber() - omsCustOrder.getTotalNumber()) <= unPackGoods.getDiffNumber() && (oldCustOrder.getTotalWeight().subtract(omsCustOrder.getTotalWeight())).compareTo(unPackGoods.getDiffWeight()) <= 0) {
+            return custOrderMapper.updateByPrimaryKeySelective(omsCustOrder);
+        } else {
+            throw new ApiException(String.format("该货物已配载，最多可减少%d件，%sKg，如有疑问，请电话沟通！！", unPackGoods.getDiffNumber(), unPackGoods.getDiffWeight()));
+        }
     }
 
     @Override

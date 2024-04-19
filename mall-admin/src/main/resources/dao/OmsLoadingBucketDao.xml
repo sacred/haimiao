@@ -26,26 +26,25 @@
         <result column="diff_number" javaType="INTEGER" property="diffNumber"/>
     </resultMap>
     <resultMap id="settlementResult" type="com.macro.mall.dto.OmsSettlementResult">
-        <result column="loading_date" jdbcType="DATE" property="loadingDate" />
-        <result column="local_cust" jdbcType="VARCHAR" property="localCust" />
-        <result column="plate_number" jdbcType="VARCHAR" property="plateNumber" />
-        <result column="loading_no" jdbcType="VARCHAR" property="loadingNo" />
-        <result column="good_type" jdbcType="VARCHAR" property="goodType" />
-        <result column="packing_type" jdbcType="VARCHAR" property="packingType" />
-        <result column="freight_fee" jdbcType="DECIMAL" property="freightFee" />
-        <result column="total_weight" jdbcType="DECIMAL" property="totalWeight" />
-        <result column="total_number" jdbcType="INTEGER" property="totalNumber" />
-        <result column="bucket_no" jdbcType="INTEGER" property="bucketNo" />
-        <result column="notes" jdbcType="INTEGER" property="notes" />
+        <result column="loading_date" jdbcType="DATE" property="loadingDate"/>
+        <result column="local_cust" jdbcType="VARCHAR" property="localCust"/>
+        <result column="plate_number" jdbcType="VARCHAR" property="plateNumber"/>
+        <result column="loading_no" jdbcType="VARCHAR" property="loadingNo"/>
+        <result column="good_type" jdbcType="VARCHAR" property="goodType"/>
+        <result column="packing_type" jdbcType="VARCHAR" property="packingType"/>
+        <result column="freight_fee" jdbcType="DECIMAL" property="freightFee"/>
+        <result column="total_weight" jdbcType="DECIMAL" property="totalWeight"/>
+        <result column="total_number" jdbcType="INTEGER" property="totalNumber"/>
+        <result column="bucket_no" jdbcType="INTEGER" property="bucketNo"/>
+        <result column="notes" jdbcType="INTEGER" property="notes"/>
     </resultMap>
     <resultMap id="weekSummaryResult" type="com.macro.mall.dto.OmsLoadingWeekSummaryResult">
-        <result column="loading_date" jdbcType="DATE" property="loadingDate" />
-        <result column="local_cust" jdbcType="VARCHAR" property="localCust" />
-        <result column="freight_fee" jdbcType="DECIMAL" property="freightFee" />
-        <result column="total_weight" jdbcType="DECIMAL" property="totalWeight" />
-        <result column="total_number" jdbcType="INTEGER" property="totalNumber" />
+        <result column="loading_date" jdbcType="DATE" property="loadingDate"/>
+        <result column="local_cust" jdbcType="VARCHAR" property="localCust"/>
+        <result column="freight_fee" jdbcType="DECIMAL" property="freightFee"/>
+        <result column="total_weight" jdbcType="DECIMAL" property="totalWeight"/>
+        <result column="total_number" jdbcType="INTEGER" property="totalNumber"/>
     </resultMap>
-
 
 
     <!--运单配载列表-->
@@ -148,21 +147,31 @@
     <!--未配载的客户信息-->
     <select id="getUnLoadingGoods" parameterType="com.macro.mall.dto.OmsUnLoadingGoodsQueryParam"
             resultMap="unLoadingGoodsResult">
-        SELECT c.total_weight - sum(IFNULL(d.total_weight, 0)) diff_weight,
-               c.total_number - sum(IFNULL(d.total_number, 0)) diff_number
-        FROM oms_cust_order c
-                 LEFT JOIN oms_order_loading l
-                           ON c.order_date = l.loading_date
-                 LEFT JOIN oms_bucket_goods_detail d
-                           ON l.id = d.order_loading_id AND c.local_cust = d.local_cust AND c.hk_cust = d.hk_cust
-                               AND c.good_type = d.good_type AND c.packing_type = d.packing_type
-        WHERE c.order_date = #{queryParam.loadingDate}
-          AND c.local_cust = #{queryParam.localCust}
-          AND c.hk_cust = #{queryParam.hkCust}
-          AND c.good_type = #{queryParam.goodType}
-          AND c.packing_type = #{queryParam.packingType}
-          AND c.order_date >= DATE_FORMAT(ADDDATE(NOW(), -2), '%Y-%m-%d')
-        GROUP BY c.order_date, c.local_cust, c.hk_cust, c.good_type, c.packing_type;
+        SELECT a.total_number - IFNULL(b.total_number, 0) diff_number,
+               a.total_weight - IFNULL(b.total_weight, 0) diff_weight
+        FROM (
+                 SELECT sum(c.total_number) total_number,
+                        sum(c.total_weight) total_weight
+                 FROM oms_cust_order c
+                 WHERE c.order_date = #{queryParam.loadingDate}
+                   AND c.local_cust = #{queryParam.localCust}
+                   AND c.hk_cust = #{queryParam.hkCust}
+                   AND c.good_type = #{queryParam.goodType}
+                   AND c.packing_type = #{queryParam.packingType}
+                   AND c.state > 0
+             ) a,
+             (
+                 SELECT sum(d.total_number) total_number,
+                        sum(d.total_weight) total_weight
+                 FROM oms_order_loading l,
+                      oms_bucket_goods_detail d
+                 WHERE l.id = d.order_loading_id
+                   AND l.loading_date = #{queryParam.loadingDate}
+                   AND d.local_cust = #{queryParam.localCust}
+                   AND d.hk_cust = #{queryParam.hkCust}
+                   AND d.good_type = #{queryParam.goodType}
+                   AND d.packing_type = #{queryParam.packingType}
+             ) b
     </select>
 
     <!--报关单-->
@@ -233,12 +242,15 @@
 
     <select id="getCurrSummary" parameterType="java.lang.String"
             resultMap="com.macro.mall.mapper.OmsBucketGoodsDetailMapper.BaseResultMap">
-        select d.good_type good_type, sum(ifnull(d.total_number, 0)) total_number, sum(ifnull(d.total_weight, 0)) total_weight, sum(ifnull(d.freight_fee, 0))   freight_fee
+        select d.good_type                    good_type,
+               sum(ifnull(d.total_number, 0)) total_number,
+               sum(ifnull(d.total_weight, 0)) total_weight,
+               sum(ifnull(d.freight_fee, 0))  freight_fee
         from oms_order_loading l,
              oms_bucket_goods_detail d
         where l.id = d.order_loading_id
           and d.state > 0
-          and l.loading_date =  #{currDate,jdbcType=DATE}
+          and l.loading_date = #{currDate,jdbcType=DATE}
         group by d.good_type
     </select>
 
