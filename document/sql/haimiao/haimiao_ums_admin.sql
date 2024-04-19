@@ -1,0 +1,6 @@
+insert into haimiao.ums_admin (id, username, password, user_type, icon, email, nick_name, note, create_time, login_time, status, extend_rel)
+values  (1, '18820004909', '$2a$10$NTxU7/cF.vy6TUo8TmwutuvOd7Cn7rwTKaqm/AxnokNJ6sWLuLT8O', 1, 'https://web.goo168.com/static/haimiao.jpg', 'test@qq.com', '管理员', null, '2018-09-29 13:55:30', '2018-09-29 13:55:39', 1, null),
+        (3, 'admin', '$2a$10$ae5EH9pOYWWuEZqB2ZRExeYslTGsYOhKI1slgcZ5DUPGVLe8KuqQe', 1, 'https://web.goo168.com/static/haimiao.jpg', 'admin@163.com', '超级管理员', '系统管理员', '2018-10-08 13:32:47', '2019-04-20 12:45:16', 1, null),
+        (4, 'peng', '$2a$10$AtePdocJwhHEtbMQ/VhgbOizUm8fC3g5SMq2uIU/NjghjJa0YHd5C', 1, 'https://web.goo168.com/static/haimiao.jpg', '', '翁总', null, '2024-04-16 00:21:20', null, 1, null),
+        (5, 'sj', '$2a$10$Ky58fyBHTU1ygXZCPGqOYeSb1bg19otCDQXlpcwDbxwRd9dOil9fS', 3, null, '', '司机测试账号', 'EG90港 司机, 密码: sj', '2024-04-16 13:15:50', null, 1, 'EG90港'),
+        (6, 'kh', '$2a$10$buvwmLemXeKLdYqdfPymZ.t.rt8OZmM/S13n.bl829Ahx6OyDmk6e', 2, null, null, '客户测试账号', '四哥客户, 密码：kh', '2024-04-16 13:16:32', null, 1, '四哥');
