@@ -161,6 +161,7 @@
           AND c.hk_cust = #{queryParam.hkCust}
           AND c.good_type = #{queryParam.goodType}
           AND c.packing_type = #{queryParam.packingType}
+          AND c.order_date >= DATE_FORMAT(ADDDATE(NOW(), -2), '%Y-%m-%d')
         GROUP BY c.order_date, c.local_cust, c.hk_cust, c.good_type, c.packing_type;
     </select>
 

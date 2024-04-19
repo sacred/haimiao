@@ -100,11 +100,11 @@ public class OmsCustOrderServiceImpl implements OmsCustOrderService {
         omsCustOrder.setTotalWeight(new BigDecimal(0));
         omsCustOrder.setTotalNumber(omsCustOrder.getFclNumber());
         omsCustOrder.setTotalWeight(new BigDecimal(omsCustOrder.getFclNumber()).multiply(omsCustOrder.getUnitWeight()));
-        if (omsCustOrder.getAdditionWeight1().compareTo(BigDecimal.ZERO) != 0) {
+        if (omsCustOrder.getAdditionWeight1() != null && omsCustOrder.getAdditionWeight1().compareTo(BigDecimal.ZERO) != 0) {
             omsCustOrder.setAdditionNumber(omsCustOrder.getAdditionNumber()+1);
             omsCustOrder.setTotalWeight(omsCustOrder.getTotalWeight().add(omsCustOrder.getAdditionWeight1()));
         }
-        if (omsCustOrder.getAdditionWeight2().compareTo(BigDecimal.ZERO) != 0) {
+        if (omsCustOrder.getAdditionWeight2() != null && omsCustOrder.getAdditionWeight2().compareTo(BigDecimal.ZERO) != 0) {
             omsCustOrder.setAdditionNumber(omsCustOrder.getAdditionNumber()+1);
             omsCustOrder.setTotalWeight(omsCustOrder.getTotalWeight().add(omsCustOrder.getAdditionWeight2()));
         }

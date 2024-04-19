@@ -251,11 +251,11 @@ public class OmsLoadingBucketServiceImpl implements OmsLoadingBucketService {
         goodsDetail.setTotalWeight(new BigDecimal(0));
         goodsDetail.setTotalNumber(goodsDetail.getFclNumber());
         goodsDetail.setTotalWeight(new BigDecimal(goodsDetail.getFclNumber()).multiply(goodsDetail.getUnitWeight()));
-        if (goodsDetail.getAdditionWeight1().compareTo(BigDecimal.ZERO) != 0) {
+        if (goodsDetail.getAdditionWeight1() != null && goodsDetail.getAdditionWeight1().compareTo(BigDecimal.ZERO) != 0) {
             goodsDetail.setAdditionNumber(goodsDetail.getAdditionNumber() + 1);
             goodsDetail.setTotalWeight(goodsDetail.getTotalWeight().add(goodsDetail.getAdditionWeight1()));
         }
-        if (goodsDetail.getAdditionWeight2().compareTo(BigDecimal.ZERO) != 0) {
+        if (goodsDetail.getAdditionWeight2() != null && goodsDetail.getAdditionWeight2().compareTo(BigDecimal.ZERO) != 0) {
             goodsDetail.setAdditionNumber(goodsDetail.getAdditionNumber() + 1);
             goodsDetail.setTotalWeight(goodsDetail.getTotalWeight().add(goodsDetail.getAdditionWeight2()));
         }
